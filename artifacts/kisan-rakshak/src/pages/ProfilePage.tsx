@@ -1,9 +1,36 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Leaf, Award, TrendingUp, User, Settings, ChevronRight, Shield, Bell } from "lucide-react";
+import { Leaf, Award, Settings, ChevronRight, Shield, Bell, Globe, LogOut, Check } from "lucide-react";
+import { useLocation } from "wouter";
+
+type Lang = "en" | "te" | "hi";
+
+const LANG_OPTIONS: { code: Lang; label: string; native: string }[] = [
+  { code: "en", label: "English", native: "EN" },
+  { code: "te", label: "Telugu", native: "తె" },
+  { code: "hi", label: "Hindi", native: "हि" },
+];
 
 export default function ProfilePage() {
+  const [, setLocation] = useLocation();
+  const [lang, setLang] = useState<Lang>("en");
+  const [showLangPicker, setShowLangPicker] = useState(false);
+  const [logoutConfirm, setLogoutConfirm] = useState(false);
   const carbonScore = 450;
   const maxScore = 1000;
+
+  const handleLogout = () => {
+    if (!logoutConfirm) {
+      setLogoutConfirm(true);
+      setTimeout(() => setLogoutConfirm(false), 3000);
+      return;
+    }
+    // Clear any stored session data
+    localStorage.clear();
+    sessionStorage.clear();
+    setLocation("/");
+    window.location.reload();
+  };
 
   return (
     <div className="px-4 py-4 space-y-4">
@@ -15,10 +42,10 @@ export default function ProfilePage() {
       >
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-black">
-            M
+            R
           </div>
           <div>
-            <h2 className="text-lg font-black">Ravi Mawa</h2>
+            <h2 className="text-lg font-black">Ravi Kumar</h2>
             <p className="text-emerald-200 text-sm">Guntur District, AP</p>
             <p className="text-emerald-200 text-xs mt-0.5">Farmer ID: KR-2024-001847</p>
           </div>
@@ -109,12 +136,56 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* Language Preference */}
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <button
+          onClick={() => setShowLangPicker(v => !v)}
+          className="flex items-center gap-3 w-full"
+          data-testid="btn-language-preference"
+        >
+          <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center">
+            <Globe size={15} className="text-emerald-600" />
+          </div>
+          <div className="flex-1 text-left">
+            <p className="text-sm font-medium text-gray-800">Language / భాష / भाषा</p>
+            <p className="text-xs text-gray-400">{LANG_OPTIONS.find(l => l.code === lang)?.label}</p>
+          </div>
+          <ChevronRight size={16} className={`text-gray-300 transition-transform ${showLangPicker ? "rotate-90" : ""}`} />
+        </button>
+
+        {showLangPicker && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="mt-3 grid grid-cols-3 gap-2"
+          >
+            {LANG_OPTIONS.map(opt => (
+              <button
+                key={opt.code}
+                onClick={() => { setLang(opt.code); setShowLangPicker(false); }}
+                className={`flex flex-col items-center gap-0.5 py-3 px-2 rounded-xl border-2 transition-all ${
+                  lang === opt.code
+                    ? "border-emerald-500 bg-emerald-50"
+                    : "border-gray-100 bg-gray-50 hover:border-emerald-200"
+                }`}
+                data-testid={`btn-profile-lang-${opt.code}`}
+              >
+                <span className="text-lg font-bold text-gray-700">{opt.native}</span>
+                <span className="text-[10px] text-gray-500">{opt.label}</span>
+                {lang === opt.code && <Check size={12} className="text-emerald-500 mt-0.5" />}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </div>
+
       {/* Settings */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-50">
         {[
           { icon: Bell, label: "Notifications", sub: "Alerts & reminders" },
           { icon: Shield, label: "Privacy & Security", sub: "Account protection" },
-          { icon: Settings, label: "App Settings", sub: "Language, units" },
+          { icon: Settings, label: "App Settings", sub: "Units, display" },
         ].map((item, i) => (
           <button
             key={i}
@@ -131,6 +202,25 @@ export default function ProfilePage() {
             <ChevronRight size={16} className="text-gray-300" />
           </button>
         ))}
+      </div>
+
+      {/* Logout */}
+      <motion.button
+        whileTap={{ scale: 0.97 }}
+        onClick={handleLogout}
+        className={`w-full flex items-center justify-center gap-2 py-4 rounded-2xl font-bold text-sm transition-all ${
+          logoutConfirm
+            ? "bg-red-500 text-white shadow-lg shadow-red-200"
+            : "bg-red-50 text-red-600 border border-red-100 hover:bg-red-100"
+        }`}
+        data-testid="btn-logout"
+      >
+        <LogOut size={16} />
+        {logoutConfirm ? "Tap again to confirm logout" : "Logout / లాగ్ అవుట్ / लॉग आउट"}
+      </motion.button>
+
+      <div className="pb-2 text-center">
+        <p className="text-[10px] text-gray-300">Kisan Rakshak AI v1.0 · Made for Telugu Farmers</p>
       </div>
     </div>
   );

@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BottomNav from "@/components/BottomNav";
-import VoiceAssistant from "@/components/VoiceAssistant";
 import Header from "@/components/Header";
 import Dashboard from "@/pages/Dashboard";
 import ScanPage from "@/pages/ScanPage";
@@ -38,7 +37,6 @@ function AppShell() {
         </Switch>
       </main>
       <BottomNav />
-      <VoiceAssistant />
     </div>
   );
 }
