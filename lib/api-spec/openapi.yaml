@@ -3,13 +3,23 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Kisan Rakshak AI - Smart Farming Platform API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: disease
+    description: Crop disease detection and fertilizer recommendations
+  - name: drones
+    description: Drone booking and swarm operations
+  - name: storage
+    description: Cold storage and spoilage monitoring
+  - name: market
+    description: B2B marketplace and industry deals
+  - name: gemini
+    description: Gemini AI chat and image operations
 paths:
   /healthz:
     get:
@@ -24,6 +34,296 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /disease/detect:
+    post:
+      operationId: detectDisease
+      tags: [disease]
+      summary: Detect crop disease from leaf image
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DetectDiseaseBody"
+      responses:
+        "200":
+          description: Disease detection result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DiseaseDetectionResult"
+        "400":
+          description: Not a leaf image
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /disease/history:
+    get:
+      operationId: getDiseaseHistory
+      tags: [disease]
+      summary: Get disease scan history
+      responses:
+        "200":
+          description: List of past scans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DiseaseScan"
+
+  /drones:
+    get:
+      operationId: listDrones
+      tags: [drones]
+      summary: List available drone operators
+      responses:
+        "200":
+          description: List of drone operators
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DroneOperator"
+
+  /drones/bookings:
+    get:
+      operationId: listDroneBookings
+      tags: [drones]
+      summary: List drone bookings
+      responses:
+        "200":
+          description: List of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DroneBooking"
+    post:
+      operationId: bookDrone
+      tags: [drones]
+      summary: Book a drone for spraying
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookDroneBody"
+      responses:
+        "201":
+          description: Booking confirmed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DroneBooking"
+
+  /storage:
+    get:
+      operationId: listStorages
+      tags: [storage]
+      summary: List nearby cold storages
+      responses:
+        "200":
+          description: List of cold storages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ColdStorage"
+
+  /storage/bookings:
+    post:
+      operationId: bookStorage
+      tags: [storage]
+      summary: Book cold storage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookStorageBody"
+      responses:
+        "201":
+          description: Storage booking confirmed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StorageBooking"
+
+  /market/deals:
+    get:
+      operationId: listMarketDeals
+      tags: [market]
+      summary: List B2B market deals
+      responses:
+        "200":
+          description: List of industry deals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MarketDeal"
+
+  /market/deals/{id}/express-interest:
+    post:
+      operationId: expressInterestInDeal
+      tags: [market]
+      summary: Express interest in a deal
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Interest registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /gemini/conversations:
+    get:
+      operationId: listGeminiConversations
+      tags: [gemini]
+      summary: List all conversations
+      responses:
+        "200":
+          description: List of conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GeminiConversation"
+    post:
+      operationId: createGeminiConversation
+      tags: [gemini]
+      summary: Create a new conversation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGeminiConversationBody"
+      responses:
+        "201":
+          description: Created conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiConversation"
+  /gemini/conversations/{id}:
+    get:
+      operationId: getGeminiConversation
+      tags: [gemini]
+      summary: Get conversation with messages
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Conversation with messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiConversationWithMessages"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiError"
+    delete:
+      operationId: deleteGeminiConversation
+      tags: [gemini]
+      summary: Delete a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GeminiError"
+  /gemini/conversations/{id}/messages:
+    get:
+      operationId: listGeminiMessages
+      tags: [gemini]
+      summary: List messages in a conversation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of messages
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GeminiMessage"
+    post:
+      operationId: sendGeminiMessage
+      tags: [gemini]
+      summary: Send a message and receive an AI response (SSE stream)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SendGeminiMessageBody"
+      responses:
+        "200":
+          description: SSE stream of assistant response chunks
+          content:
+            text/event-stream: {}
+  /gemini/generate-image:
+    post:
+      operationId: generateGeminiImage
+      tags: [gemini]
+      summary: Generate an image from a text prompt
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GenerateGeminiImageBody"
+      responses:
+        "200":
+          description: Generated image data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerateGeminiImageResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +334,415 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+
+    DetectDiseaseBody:
+      type: object
+      properties:
+        imageBase64:
+          type: string
+          description: Base64 encoded image of the leaf
+        cropType:
+          type: string
+          description: Type of crop (e.g., rice, wheat, tomato)
+      required:
+        - imageBase64
+
+    DiseaseDetectionResult:
+      type: object
+      properties:
+        isLeaf:
+          type: boolean
+        diseaseName:
+          type: string
+        confidence:
+          type: number
+        severity:
+          type: string
+          enum: [low, medium, high]
+        description:
+          type: string
+        symptoms:
+          type: array
+          items:
+            type: string
+        fertilizers:
+          type: array
+          items:
+            $ref: "#/components/schemas/FertilizerRecommendation"
+        preventionTips:
+          type: array
+          items:
+            type: string
+        scanId:
+          type: integer
+      required:
+        - isLeaf
+        - diseaseName
+        - confidence
+        - severity
+        - description
+        - symptoms
+        - fertilizers
+        - preventionTips
+        - scanId
+
+    FertilizerRecommendation:
+      type: object
+      properties:
+        name:
+          type: string
+        dosage:
+          type: string
+        frequency:
+          type: string
+        notes:
+          type: string
+        canBook:
+          type: boolean
+      required:
+        - name
+        - dosage
+        - frequency
+        - notes
+        - canBook
+
+    DiseaseScan:
+      type: object
+      properties:
+        id:
+          type: integer
+        diseaseName:
+          type: string
+        confidence:
+          type: number
+        severity:
+          type: string
+        cropType:
+          type: string
+        scannedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - diseaseName
+        - confidence
+        - severity
+        - cropType
+        - scannedAt
+
+    DroneOperator:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        distanceKm:
+          type: number
+        pricePerAcre:
+          type: number
+        rating:
+          type: number
+        available:
+          type: boolean
+        droneModel:
+          type: string
+        speciality:
+          type: string
+      required:
+        - id
+        - name
+        - location
+        - distanceKm
+        - pricePerAcre
+        - rating
+        - available
+        - droneModel
+        - speciality
+
+    BookDroneBody:
+      type: object
+      properties:
+        operatorId:
+          type: integer
+        fieldSizeAcres:
+          type: number
+        scheduledDate:
+          type: string
+        pesticide:
+          type: string
+        notes:
+          type: string
+      required:
+        - operatorId
+        - fieldSizeAcres
+        - scheduledDate
+        - pesticide
+
+    DroneBooking:
+      type: object
+      properties:
+        id:
+          type: integer
+        operatorName:
+          type: string
+        fieldSizeAcres:
+          type: number
+        scheduledDate:
+          type: string
+        pesticide:
+          type: string
+        totalCost:
+          type: number
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+        bookedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - operatorName
+        - fieldSizeAcres
+        - scheduledDate
+        - pesticide
+        - totalCost
+        - status
+        - bookedAt
+
+    ColdStorage:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        location:
+          type: string
+        distanceKm:
+          type: number
+        pricePerDayTon:
+          type: number
+        capacityTons:
+          type: number
+        availableSlots:
+          type: number
+        temperature:
+          type: string
+        rating:
+          type: number
+        features:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - name
+        - location
+        - distanceKm
+        - pricePerDayTon
+        - capacityTons
+        - availableSlots
+        - temperature
+        - rating
+        - features
+
+    BookStorageBody:
+      type: object
+      properties:
+        storageId:
+          type: integer
+        quantityTons:
+          type: number
+        startDate:
+          type: string
+        durationDays:
+          type: integer
+        cropType:
+          type: string
+      required:
+        - storageId
+        - quantityTons
+        - startDate
+        - durationDays
+        - cropType
+
+    StorageBooking:
+      type: object
+      properties:
+        id:
+          type: integer
+        storageName:
+          type: string
+        quantityTons:
+          type: number
+        startDate:
+          type: string
+        durationDays:
+          type: integer
+        totalCost:
+          type: number
+        status:
+          type: string
+        bookedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - storageName
+        - quantityTons
+        - startDate
+        - durationDays
+        - totalCost
+        - status
+        - bookedAt
+
+    MarketDeal:
+      type: object
+      properties:
+        id:
+          type: integer
+        company:
+          type: string
+        logo:
+          type: string
+        cropType:
+          type: string
+        quantityTons:
+          type: number
+        pricePerKg:
+          type: number
+        deadline:
+          type: string
+        requirements:
+          type: string
+        location:
+          type: string
+        isUrgent:
+          type: boolean
+        interestedCount:
+          type: integer
+      required:
+        - id
+        - company
+        - logo
+        - cropType
+        - quantityTons
+        - pricePerKg
+        - deadline
+        - requirements
+        - location
+        - isUrgent
+        - interestedCount
+
+    GeminiConversation:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - createdAt
+    GeminiMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        conversationId:
+          type: integer
+        role:
+          type: string
+        content:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - conversationId
+        - role
+        - content
+        - createdAt
+    CreateGeminiConversationBody:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+    SendGeminiMessageBody:
+      type: object
+      properties:
+        content:
+          type: string
+      required:
+        - content
+    GeminiConversationWithMessages:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/GeminiMessage"
+      required:
+        - id
+        - title
+        - createdAt
+        - messages
+    GenerateGeminiImageBody:
+      type: object
+      properties:
+        prompt:
+          type: string
+      required:
+        - prompt
+    GenerateGeminiImageResponse:
+      type: object
+      properties:
+        b64_json:
+          type: string
+        mimeType:
+          type: string
+      required:
+        - b64_json
+        - mimeType
+    GeminiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error

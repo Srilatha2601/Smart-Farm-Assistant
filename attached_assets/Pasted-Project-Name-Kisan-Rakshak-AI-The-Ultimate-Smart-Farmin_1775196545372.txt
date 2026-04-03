@@ -1,0 +1,50 @@
+Project Name: Kisan Rakshak AI - The Ultimate Smart Farming Ecosystem.
+Design Strategy: Create a high-fidelity, mobile-responsive web application for farmers. Use a premium, modern aesthetic with Emerald Green, Deep Earth Brown, and Soft White colors. Use Tailwind CSS for a sleek UI and Lucide Icons for all navigation elements.
+Key Pages & Features to Implement:
+Smart Dashboard (Home):
+A top section showing Live Weather and Soil Moisture %.
+A "Field Health Gauge" (Speedometer style) that shows 0-100% health.
+A prominent "Night Guard" Toggle Switch. When turned ON, show a pulsing radar animation and a "Security Active" status.
+AI Disease Doctor (Camera Interface):
+A dedicated page with a camera viewfinder overlay and a "Scan" button.
+After clicking "Scan," show a loading animation: "Analyzing Leaf Texture with Gemini AI..."
+Display a Result Card with: Disease Name, Confidence Score (e.g., 94%), and a "Quick Action: Book Drone" button.
+Drone Swarm Center (Mapping):
+A map view showing the farmer's field with "Hotspots" (red zones) where pests are detected.
+A button to "Book Swarm Spraying" which notifies 3 nearby drone operators.
+Smart Storage & Spoilage Monitor:
+A list of nearby Cold Storages and Warehouses with distance and per-day pricing.
+An "AI Spoilage Scanner" feature: A UI to upload a bin/crate video, which then highlights "Potential Rotting Areas" with red bounding boxes.
+A "Sell vs Store" Advisor widget showing profit graphs (Current Price vs. 3-Month Forecast).
+B2B Industry Marketplace:
+A "Direct Connect" feed showing requirements from companies like "Lays (Potato)", "Britannia (Wheat)", etc.
+An "AI Negotiator" Chatbot button that helps farmers draft a professional message to the industry for better pricing.
+Kisan-Mitra Voice Assistant:
+A floating, animated Mic button at the bottom right that says "Matladu Mawa".
+When clicked, open a chat drawer with pre-filled Telugu/English prompts like "When to harvest?" or "Market rates today?".
+Sustainability Card:
+On the profile page, show a "Carbon Credit Score" to incentivize organic farming.
+Navigation: Bottom navigation bar with icons: [Home, Scan, Storage, Market, Profile]. Use smooth transitions between pages.Goal: Create a high-fidelity, premium "Agricultural Command Center" web app called "Kisan Rakshak AI". The design must be modern, using Glassmorphism (blurred cards), Emerald Green accents, and a clean white/soft-grey background.
+1. Global Navigation & Language:
+Sticky Header: User profile "Namaskaram, Mawa! 👋", Location (Guntur, AP), and a Language Toggle [English | తెలుగు] at the top right.
+Bottom Nav: Minimalist icons: [Dashboard, Field Map, Marketplace, Profile].
+2. Hero Section (Intelligence Dashboard):
+Field Health Gauge: A large, animated circular progress ring showing "Crop Health: 88%".
+AI Night Guard (Security): A dedicated Dark-Mode Card with a pulsing Radar Animation. Add a toggle switch: "Activate Perimeter Security". When ON, show "Scanning for Wild Animals... 🛡️".
+3. The "Smart Action" 3x2 Grid (Blinkit-Style but Premium):
+AI Scan (Camera Icon): "Spot Disease" - Opens a camera UI to scan leaves.
+Pesticide Lab (Bottle Icon): "Smart Dosing" - AI reads pesticide labels and suggests mixing ratios in Telugu.
+Drone Swarm (Drone Icon): "Precision Spraying" - Book multiple drones for large fields.
+Smart Storage (Warehouse Icon): "Spoilage Alert" - Check cold storage slots and detect rotting via AI.
+B2B Market (Handshake Icon): "Industry Deals" - Direct contracts with companies like ITC/Lays.
+Carbon Credits (Leaf Icon): "Eco Earnings" - Show sustainability points (e.g., 450 pts).
+4. Live B2B Feed & Alerts:
+A horizontal scrolling list of "Live Industry Requirements" (e.g., "Britannia needs 20 Tons Wheat").
+A small "Weather Alert" banner: "Heavy rain in 3 hours. Avoid spraying now!"
+5. Interaction & Voice:
+The "Mawa" Button: A floating, glowing bottom-right Mic button labeled "Matladu Mawa (AI Assistant)".
+When clicked, open a chat drawer that supports Telugu Voice-to-Text.
+Technical Requirements: > - Use Tailwind CSS for 20px rounded corners and soft shadows.
+Use Lucide-react for professional icons.
+Use Framer Motion for smooth transitions and the radar/gauge animations.
+Dual Language: Ensure all main buttons have English & Telugu and english languages for understand all but randomly Implement english only.

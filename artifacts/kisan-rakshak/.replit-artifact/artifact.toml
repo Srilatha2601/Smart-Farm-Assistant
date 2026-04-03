@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Kisan Rakshak AI"
+version = "1.0.0"
+id = "artifacts/kisan-rakshak"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25012
+
+[services.development]
+run = "pnpm --filter @workspace/kisan-rakshak run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/kisan-rakshak", "run", "build" ]
+publicDir = "artifacts/kisan-rakshak/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25012"
+BASE_PATH = "/"
